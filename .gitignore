@@ -1,0 +1,7 @@
+.idea
+bin
+lib
+venv
+.DS_Store
+__pycache__
+pyenv.cfg

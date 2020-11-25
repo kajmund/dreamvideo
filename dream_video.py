@@ -27,7 +27,7 @@ from deepdreamer import model, load_image, tofloat32, recursive_optimize, resize
 import numpy as np
 import PIL.Image
 import cv2
-from PIL import Image
+
 
 cap = cv2.VideoCapture('video/crime.mp4')
 if cap.isOpened() == False:
@@ -35,9 +35,6 @@ if cap.isOpened() == False:
 
 dream_name = 'crime_out_cool'
 fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-
-out = cv2.VideoWriter('{}.mp4'.format(dream_name), fourcc, 30.0, (640, 360))
-
 count = 0
 skipToFrame = 1
 
@@ -61,43 +58,27 @@ try:
         count = count + 1
 
         ret, frame = cap.read()
-        if ret == False:
+        if not ret:
             cap.release()
-            out.release()
             print("Video done! Hurray!")
             exit(0)
         if count < skipToFrame:
             continue
-
         print("Processing frame %d" % count)
-        # frame = resize_image(tofloat32(frame), None, 0.5)
-        pressedKey = cv2.waitKey(1) & 0xFF
-
-        if pressedKey == ord('q'):
-            cap.release()
-            out.release()
-            exit()
 
         if cv2.countNonZero(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)) == 0:
             print("Image is black: frame %d" % count)
             continue
 
-        #frame = dream(frame, 1)
-        #frame = dream(frame, 2)
         frame = dream(frame, 7)
-        out.write(frame)
-        #result = PIL.Image.fromarray(frame, mode='RGB')
+        result = PIL.Image.fromarray(frame, mode='RGB')
 
-        # result.save('dream_image_out.jpg')
-        #result.show()
+        result.save('out/{} - frame - {}.png'.format(dream_name, count))
 except KeyboardInterrupt:
     cap.release()
-    out.release()
     cv2.destroyAllWindows()
     print("Video interuppted! Hope it still works :|")
     exit(0)
 
 # When everything done, release the video capture object
 cap.release()
-# Closes all the frames
-cv2.destroyAllWindows()

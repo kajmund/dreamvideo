@@ -263,7 +263,7 @@ def optimize_image(layer_tensor, image,
         else:
             # Otherwise show a little progress-indicator.
             print(". ", end="")
-            #print(". ")
+
     return img
 
 
